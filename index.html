@@ -54,7 +54,6 @@
       margin-top: 5px;
     }
 
-    /* تمرير أفقي للكروت */
     .cards-scroll {
       display: flex;
       overflow-x: auto;
@@ -79,7 +78,6 @@
       border-radius: 10px;
     }
 
-    /* تصميم الكارت بنسبة 9:16 */
     .story-card {
       flex: 0 0 auto;
       width: 310px;
@@ -98,7 +96,6 @@
       transform: scale(0.97);
     }
 
-    /* خلفية قلوب وأشكال مبهجة */
     .card-bg-pattern {
       position: absolute;
       top: 0;
@@ -120,7 +117,6 @@
       100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
     }
 
-    /* محتوى الكارت */
     .card-inner {
       position: relative;
       z-index: 10;
@@ -132,7 +128,6 @@
       text-align: center;
     }
 
-    /* تاج الفرح */
     .crown-icon {
       font-size: 1.5rem;
       color: #f5bc70;
@@ -271,21 +266,28 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<!-- استخدام مكتبة html2canvas من مصدر أكثر استقراراً -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-  // --------------------------------------------------------------
-  // التواريخ الميلادية والهجرية المطلوبة (19 ذو القعدة -> 12 ذو الحجة)
-  // الزفاف يوم 29 مايو 2026 (12 ذو الحجة) الساعة 12 ظهراً (قبل صلاة الجمعة)
-  const weddingDate = new Date(2026, 4, 29, 12, 0, 0); // 12 ظهراً
-  
-  // بداية العد: 19 ذو القعدة = 6 مايو 2026 (حسب المطلوب)
+  (function() {
+    // التأكد من تحميل المكتبة قبل البدء
+    if (typeof html2canvas === 'undefined') {
+      console.error("مكتبة html2canvas لم تحمل، جاري المحاولة مرة أخرى");
+      // محاولة تحميل بديل
+      var script = document.createElement('script');
+      script.src = 'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js';
+      document.head.appendChild(script);
+    }
+  })();
+
+  // التواريخ
+  const weddingDate = new Date(2026, 4, 29, 12, 0, 0);
   const startDate = new Date(2026, 4, 6, 0, 0, 0);
   const endDate = new Date(2026, 4, 29, 0, 0, 0);
   
   const locationText = "الجزيرة - ريفي المسلمية - قرية هزاوي";
   const timeText = "قبل صلاة الجمعة الساعة 12 الظهر";
   
-  // رسائل باللهجة السودانية الجميلة
   const sudaniMessages = [
     "💛 تعالو شاركونا الفرحة، العرس جاي وما بنستغنى عن حضوركم 💛",
     "🌹 والله فرحتنا بتتم بيكم، ان شاء الله تكونو معانا 🌹",
@@ -299,41 +301,22 @@
     "❤️ من القلب لي القلب، يا ريت تكونو معانا في العرس ❤️"
   ];
   
-  // التواريخ الهجرية الصحيحة:
-  // 6 مايو 2026 = 19 ذو القعدة 1447
-  // 29 مايو 2026 = 12 ذو الحجة 1447
   function getHijriForDate(date) {
     const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    // خريطة تقريبية دقيقة للمناسبة
-    if (year === 2026 && month === 4) { // مايو
-      if (day === 6) return "19 ذو القعدة 1447";
-      if (day === 7) return "20 ذو القعدة 1447";
-      if (day === 8) return "21 ذو القعدة 1447";
-      if (day === 9) return "22 ذو القعدة 1447";
-      if (day === 10) return "23 ذو القعدة 1447";
-      if (day === 11) return "24 ذو القعدة 1447";
-      if (day === 12) return "25 ذو القعدة 1447";
-      if (day === 13) return "26 ذو القعدة 1447";
-      if (day === 14) return "27 ذو القعدة 1447";
-      if (day === 15) return "28 ذو القعدة 1447";
-      if (day === 16) return "29 ذو القعدة 1447";
-      if (day === 17) return "30 ذو القعدة 1447";
-      if (day === 18) return "1 ذو الحجة 1447";
-      if (day === 19) return "2 ذو الحجة 1447";
-      if (day === 20) return "3 ذو الحجة 1447";
-      if (day === 21) return "4 ذو الحجة 1447";
-      if (day === 22) return "5 ذو الحجة 1447";
-      if (day === 23) return "6 ذو الحجة 1447";
-      if (day === 24) return "7 ذو الحجة 1447";
-      if (day === 25) return "8 ذو الحجة 1447";
-      if (day === 26) return "9 ذو الحجة 1447";
-      if (day === 27) return "10 ذو الحجة 1447";
-      if (day === 28) return "11 ذو الحجة 1447";
-      if (day === 29) return "12 ذو الحجة 1447";
+    if (date.getFullYear() === 2026 && date.getMonth() === 4) {
+      const hijriMap = {
+        6: "19 ذو القعدة 1447", 7: "20 ذو القعدة 1447", 8: "21 ذو القعدة 1447",
+        9: "22 ذو القعدة 1447", 10: "23 ذو القعدة 1447", 11: "24 ذو القعدة 1447",
+        12: "25 ذو القعدة 1447", 13: "26 ذو القعدة 1447", 14: "27 ذو القعدة 1447",
+        15: "28 ذو القعدة 1447", 16: "29 ذو القعدة 1447", 17: "30 ذو القعدة 1447",
+        18: "1 ذو الحجة 1447", 19: "2 ذو الحجة 1447", 20: "3 ذو الحجة 1447",
+        21: "4 ذو الحجة 1447", 22: "5 ذو الحجة 1447", 23: "6 ذو الحجة 1447",
+        24: "7 ذو الحجة 1447", 25: "8 ذو الحجة 1447", 26: "9 ذو الحجة 1447",
+        27: "10 ذو الحجة 1447", 28: "11 ذو الحجة 1447", 29: "12 ذو الحجة 1447"
+      };
+      return hijriMap[day] || `${day} ذو القعدة 1447`;
     }
-    return `${day} ${month+1} 1447`;
+    return `${day} شهر 1447`;
   }
   
   function formatGregorian(date) {
@@ -342,13 +325,11 @@
     return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
   }
   
-  // حساب الأيام المتبقية
   function daysToWedding(currentDate) {
     const diff = weddingDate - currentDate;
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   }
   
-  // توليد قائمة الأيام
   function getAllDays() {
     const days = [];
     let current = new Date(startDate);
@@ -362,24 +343,26 @@
   const allDays = getAllDays();
   const container = document.getElementById('cardsScroll');
   
-  // دالة حفظ الصورة بدون أي نصوص تحضير مزعجة
   window.saveCard = async (cardElement) => {
     if (!cardElement) return;
+    if (typeof html2canvas === 'undefined') {
+      alert("جاري تحميل المكتبة، حاول مرة ثانية خلال ثوان");
+      return;
+    }
     try {
       const canvas = await html2canvas(cardElement, {
-        scale: 2.8,
+        scale: 2.5,
         backgroundColor: null,
         logging: false,
-        useCORS: true,
-        allowTaint: false
+        useCORS: true
       });
       const link = document.createElement('a');
       link.download = `farah_sudani_${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (err) {
-      console.warn(err);
-      alert("عذراً، حاول مرة ثانية أو خذ لقطة شاشة يدوي");
+      console.error(err);
+      alert("حدث خطأ، حاول مرة ثانية");
     }
   };
   
@@ -411,34 +394,30 @@
       celebrationText = sudaniMessages[idx % sudaniMessages.length];
     }
     
-    // إضافة جملة الساعة لكل الكروت
     if (!isWeddingDay && remaining !== 1 && remaining > 3) {
       celebrationText += `<br><span style="font-size:0.7rem;">⏰ الزفاف الساعة 12 الظهر قبل صلاة الجمعة ⏰</span>`;
     }
     
-    // إنشاء العناصر
     const card = document.createElement('div');
     card.className = 'story-card';
     
-    // خلفية مزينة بقلوب وأشكال
     const bgPattern = document.createElement('div');
     bgPattern.className = 'card-bg-pattern';
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 20; i++) {
       const type = Math.random() > 0.5 ? 'fas fa-heart' : 'fas fa-star';
       const el = document.createElement('i');
       el.className = `${type} float-element`;
       el.style.left = Math.random() * 100 + '%';
       el.style.top = Math.random() * 100 + '%';
-      el.style.fontSize = (Math.random() * 28 + 12) + 'px';
+      el.style.fontSize = (Math.random() * 24 + 10) + 'px';
       el.style.animationDelay = Math.random() * 6 + 's';
       el.style.animationDuration = (Math.random() * 7 + 4) + 's';
-      el.style.color = `rgba(230, 110, 85, ${Math.random() * 0.25 + 0.1})`;
+      el.style.color = `rgba(220, 100, 70, ${Math.random() * 0.25 + 0.1})`;
       bgPattern.appendChild(el);
     }
     
     const inner = document.createElement('div');
     inner.className = 'card-inner';
-    
     const hijri = getHijriForDate(day);
     
     inner.innerHTML = `
@@ -487,16 +466,14 @@
     const saveBtn = inner.querySelector('.save-icon');
     saveBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
-      // تغيير بسيط ومباشر بدون كلام مزعج
       const originalHtml = saveBtn.innerHTML;
       saveBtn.innerHTML = '<i class="fas fa-download"></i> يتم...';
       saveBtn.disabled = true;
-      await saveCard(card);
+      await window.saveCard(card);
       saveBtn.innerHTML = originalHtml;
       saveBtn.disabled = false;
     });
     
-    // الضغط على الكارت نفسه يحاكي زر الحفظ
     card.addEventListener('click', (e) => {
       if (e.target === saveBtn || saveBtn.contains(e.target)) return;
       saveBtn.click();
@@ -505,7 +482,7 @@
     container.appendChild(card);
   });
   
-  console.log(`تم إنشاء ${allDays.length} كرت بمناسبة عرس أبو حفص ونمارق باللهجة السودانية`);
+  console.log(`✅ تم إنشاء ${allDays.length} كرت بنجاح`);
 </script>
 </body>
 </html>
