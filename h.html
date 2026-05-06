@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>كروت فرح أبو حفص & نمارق - ستوري واتساب</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, #2d1a15 0%, #4a2c24 100%);
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      color: #fff5e8;
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .header h1 i {
+      color: #ffaa88;
+      margin: 0 6px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .header p {
+      color: #ffddcc;
+      font-size: 0.85rem;
+      margin-top: 5px;
+    }
+
+    /* تمرير أفقي للكروت */
+    .cards-scroll {
+      display: flex;
+      overflow-x: auto;
+      gap: 1.2rem;
+      padding: 1rem 0.5rem 2rem;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+
+    .cards-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .cards-scroll::-webkit-scrollbar-track {
+      background: #6b4136;
+      border-radius: 10px;
+    }
+
+    .cards-scroll::-webkit-scrollbar-thumb {
+      background: #f4a07a;
+      border-radius: 10px;
+    }
+
+    /* تصميم الكارت بنسبة 9:16 */
+    .story-card {
+      flex: 0 0 auto;
+      width: 310px;
+      height: 550px;
+      background: radial-gradient(circle at 20% 30%, #fffaf5, #fff0e6);
+      border-radius: 55px;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.35), 0 0 0 4px #ffdfce, 0 0 0 10px #fffaf0;
+      position: relative;
+      overflow: hidden;
+      scroll-snap-align: start;
+      transition: transform 0.25s ease;
+      cursor: pointer;
+    }
+
+    .story-card:active {
+      transform: scale(0.97);
+    }
+
+    /* خلفية قلوب وأشكال مبهجة */
+    .card-bg-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .float-element {
+      position: absolute;
+      animation: floatAround 9s infinite ease-in-out;
+    }
+
+    @keyframes floatAround {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+      50% { transform: translateY(-15px) rotate(8deg); opacity: 0.5; }
+      100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+    }
+
+    /* محتوى الكارت */
+    .card-inner {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.3rem 1.2rem;
+      text-align: center;
+    }
+
+    /* تاج الفرح */
+    .crown-icon {
+      font-size: 1.5rem;
+      color: #f5bc70;
+      margin-bottom: 5px;
+    }
+
+    .badge-count {
+      background: linear-gradient(135deg, #e68364, #da5a3a);
+      display: inline-block;
+      padding: 5px 18px;
+      border-radius: 50px;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: bold;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .days-remaining {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #bd432a, #e97a58);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+      margin: 5px 0;
+    }
+
+    .hijri-date-big {
+      background: #fff0e6;
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      color: #b15a42;
+      font-weight: bold;
+    }
+
+    .couple-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #9e3b26, #c96043);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 10px 0;
+    }
+
+    .sudani-message {
+      background: #fffbf5;
+      border-radius: 40px;
+      padding: 14px 10px;
+      margin: 12px 0;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #4f3128;
+      border: 1px solid #ffcfbb;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .location-time {
+      font-size: 0.7rem;
+      color: #bd7861;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: #fff3ec;
+      padding: 6px 8px;
+      border-radius: 50px;
+      margin-top: 5px;
+    }
+
+    .save-icon {
+      background: #e27a60;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 40px;
+      color: white;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: bold;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.05s linear;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .save-icon:active {
+      transform: scale(0.96);
+    }
+
+    .footer-emoji {
+      font-size: 0.65rem;
+      color: #c58b74;
+      margin-top: 8px;
+    }
+
+    .info-footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #ffefe5;
+      background: rgba(0,0,0,0.3);
+      padding: 0.7rem;
+      border-radius: 60px;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      .story-card {
+        width: 280px;
+        height: 500px;
+      }
+      .couple-name {
+        font-size: 1.3rem;
+      }
+      .days-remaining {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1><i class="fas fa-heart"></i> كروت الفرحة السودانية <i class="fas fa-heart"></i></h1>
+    <p>زفاف أبو حفص & نمارق | اضغط ع الكارت وخرّجه للستوري مباشرة</p>
+  </div>
+
+  <div class="cards-scroll" id="cardsScroll"></div>
+  <div class="info-footer">
+    <i class="fas fa-download"></i> اضغط على أي كارد عشان تنزله كصورة وترفعه ستوري واتساب<br>
+    <i class="fas fa-calendar-alt"></i> الكروت من 19 ذو القعدة لي 12 ذو الحجة (الموافق 6 مايو - 29 مايو 2026)
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+  // --------------------------------------------------------------
+  // التواريخ الميلادية والهجرية المطلوبة (19 ذو القعدة -> 12 ذو الحجة)
+  // الزفاف يوم 29 مايو 2026 (12 ذو الحجة) الساعة 12 ظهراً (قبل صلاة الجمعة)
+  const weddingDate = new Date(2026, 4, 29, 12, 0, 0); // 12 ظهراً
+  
+  // بداية العد: 19 ذو القعدة = 6 مايو 2026 (حسب المطلوب)
+  const startDate = new Date(2026, 4, 6, 0, 0, 0);
+  const endDate = new Date(2026, 4, 29, 0, 0, 0);
+  
+  const locationText = "الجزيرة - ريفي المسلمية - قرية هزاوي";
+  const timeText = "قبل صلاة الجمعة الساعة 12 الظهر";
+  
+  // رسائل باللهجة السودانية الجميلة
+  const sudaniMessages = [
+    "💛 تعالو شاركونا الفرحة، العرس جاي وما بنستغنى عن حضوركم 💛",
+    "🌹 والله فرحتنا بتتم بيكم، ان شاء الله تكونو معانا 🌹",
+    "🎊 يا هلا والله، العرس قرّب، ما تنسونا 🎊",
+    "✨ نورونا بحضوركم الجميل، دايرين نفرح بيكم ✨",
+    "🌸 الفرحة زادت، مستنيينكم بفارغ الصبر 🌸",
+    "💑 يا عسى الله يبارك في جمعتنا، تفضلو تشرفو 💑",
+    "🎁 زفاف أبو حفص ونمارق، والله حضوركم يزينا 🎁",
+    "⭐ تعالو نعيش الفرحة سوا، العرس في انتظاركم ⭐",
+    "🍃 ما تقصروا، فرحتنا بدوّنكم، استنونا 🍃",
+    "❤️ من القلب لي القلب، يا ريت تكونو معانا في العرس ❤️"
+  ];
+  
+  // التواريخ الهجرية الصحيحة:
+  // 6 مايو 2026 = 19 ذو القعدة 1447
+  // 29 مايو 2026 = 12 ذو الحجة 1447
+  function getHijriForDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    // خريطة تقريبية دقيقة للمناسبة
+    if (year === 2026 && month === 4) { // مايو
+      if (day === 6) return "19 ذو القعدة 1447";
+      if (day === 7) return "20 ذو القعدة 1447";
+      if (day === 8) return "21 ذو القعدة 1447";
+      if (day === 9) return "22 ذو القعدة 1447";
+      if (day === 10) return "23 ذو القعدة 1447";
+      if (day === 11) return "24 ذو القعدة 1447";
+      if (day === 12) return "25 ذو القعدة 1447";
+      if (day === 13) return "26 ذو القعدة 1447";
+      if (day === 14) return "27 ذو القعدة 1447";
+      if (day === 15) return "28 ذو القعدة 1447";
+      if (day === 16) return "29 ذو القعدة 1447";
+      if (day === 17) return "30 ذو القعدة 1447";
+      if (day === 18) return "1 ذو الحجة 1447";
+      if (day === 19) return "2 ذو الحجة 1447";
+      if (day === 20) return "3 ذو الحجة 1447";
+      if (day === 21) return "4 ذو الحجة 1447";
+      if (day === 22) return "5 ذو الحجة 1447";
+      if (day === 23) return "6 ذو الحجة 1447";
+      if (day === 24) return "7 ذو الحجة 1447";
+      if (day === 25) return "8 ذو الحجة 1447";
+      if (day === 26) return "9 ذو الحجة 1447";
+      if (day === 27) return "10 ذو الحجة 1447";
+      if (day === 28) return "11 ذو الحجة 1447";
+      if (day === 29) return "12 ذو الحجة 1447";
+    }
+    return `${day} ${month+1} 1447`;
+  }
+  
+  function formatGregorian(date) {
+    const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  }
+  
+  // حساب الأيام المتبقية
+  function daysToWedding(currentDate) {
+    const diff = weddingDate - currentDate;
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
+  
+  // توليد قائمة الأيام
+  function getAllDays() {
+    const days = [];
+    let current = new Date(startDate);
+    while (current <= endDate) {
+      days.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+    return days;
+  }
+  
+  const allDays = getAllDays();
+  const container = document.getElementById('cardsScroll');
+  
+  // دالة حفظ الصورة بدون أي نصوص تحضير مزعجة
+  window.saveCard = async (cardElement) => {
+    if (!cardElement) return;
+    try {
+      const canvas = await html2canvas(cardElement, {
+        scale: 2.8,
+        backgroundColor: null,
+        logging: false,
+        useCORS: true,
+        allowTaint: false
+      });
+      const link = document.createElement('a');
+      link.download = `farah_sudani_${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      console.warn(err);
+      alert("عذراً، حاول مرة ثانية أو خذ لقطة شاشة يدوي");
+    }
+  };
+  
+  // إنشاء الكروت
+  allDays.forEach((day, idx) => {
+    const remaining = daysToWedding(day);
+    const isToday = (day.toDateString() === new Date().toDateString());
+    const isWeddingDay = (remaining === 0);
+    
+    let badgeText = "";
+    let daysText = "";
+    let celebrationText = "";
+    
+    if (isWeddingDay) {
+      badgeText = "🎉 اليوم العرس الكبير 🎉";
+      daysText = "يوم الفرحة";
+      celebrationText = "🎊 النهار ده العرس! مستنياكم في الزفة والطرب، الفرحة ما تكتمل بدونكم 🎊";
+    } else if (remaining === 1) {
+      badgeText = "🔥 بكرة العرس 🔥";
+      daysText = "غداً الفرحة";
+      celebrationText = "⏰ بكرة الساعة 12 قبل صلاة الجمعة، جهزوا أحلى الأزياء و تعالو نفرح سوا ⏰";
+    } else if (remaining <= 3) {
+      badgeText = `⭐ باقي ${remaining} أيام ونجتمع ⭐`;
+      daysText = `${remaining} أيام`;
+      celebrationText = `خلص بقى ${remaining} يوم ونشوف بعض في العرس، ما تتأخروا علينا!`;
+    } else {
+      badgeText = `متبقي من الايام`;
+      daysText = `${remaining}`;
+      celebrationText = sudaniMessages[idx % sudaniMessages.length];
+    }
+    
+    // إضافة جملة الساعة لكل الكروت
+    if (!isWeddingDay && remaining !== 1 && remaining > 3) {
+      celebrationText += `<br><span style="font-size:0.7rem;">⏰ الزفاف الساعة 12 الظهر قبل صلاة الجمعة ⏰</span>`;
+    }
+    
+    // إنشاء العناصر
+    const card = document.createElement('div');
+    card.className = 'story-card';
+    
+    // خلفية مزينة بقلوب وأشكال
+    const bgPattern = document.createElement('div');
+    bgPattern.className = 'card-bg-pattern';
+    for (let i = 0; i < 24; i++) {
+      const type = Math.random() > 0.5 ? 'fas fa-heart' : 'fas fa-star';
+      const el = document.createElement('i');
+      el.className = `${type} float-element`;
+      el.style.left = Math.random() * 100 + '%';
+      el.style.top = Math.random() * 100 + '%';
+      el.style.fontSize = (Math.random() * 28 + 12) + 'px';
+      el.style.animationDelay = Math.random() * 6 + 's';
+      el.style.animationDuration = (Math.random() * 7 + 4) + 's';
+      el.style.color = `rgba(230, 110, 85, ${Math.random() * 0.25 + 0.1})`;
+      bgPattern.appendChild(el);
+    }
+    
+    const inner = document.createElement('div');
+    inner.className = 'card-inner';
+    
+    const hijri = getHijriForDate(day);
+    
+    inner.innerHTML = `
+      <div>
+        <div class="crown-icon"><i class="fas fa-crown"></i></div>
+        <div class="badge-count">
+          <i class="fas fa-calendar-heart"></i> ${badgeText}
+        </div>
+        <div class="days-remaining">
+          ${daysText} ${!isWeddingDay && remaining > 1 ? 'يوم' : ''}
+        </div>
+        <div class="hijri-date-big">
+          <i class="fas fa-moon"></i> ${hijri}
+        </div>
+        <div style="font-size:0.6rem; color:#b36c54; margin:5px 0;">
+          ${formatGregorian(day)} ${isToday ? '<i class="fas fa-heart" style="color:#e26d52;"></i>' : ''}
+        </div>
+      </div>
+      
+      <div>
+        <div class="couple-name">
+          <i class="fas fa-heart"></i> أبو حفص & نمارق <i class="fas fa-heart"></i>
+        </div>
+        <div class="sudani-message">
+          ${celebrationText}
+        </div>
+        <div class="location-time">
+          <span><i class="fas fa-map-pin"></i> ${locationText}</span>
+          <span><i class="fas fa-clock"></i> ${timeText}</span>
+        </div>
+      </div>
+      
+      <div>
+        <button class="save-icon" type="button">
+          <i class="fas fa-camera-retro"></i> احفظ الكرت
+        </button>
+        <div class="footer-emoji">
+          <i class="fas fa-heartbeat"></i> يا رب تتم الفرحة بيكم <i class="fas fa-heartbeat"></i>
+        </div>
+      </div>
+    `;
+    
+    card.appendChild(bgPattern);
+    card.appendChild(inner);
+    
+    const saveBtn = inner.querySelector('.save-icon');
+    saveBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      // تغيير بسيط ومباشر بدون كلام مزعج
+      const originalHtml = saveBtn.innerHTML;
+      saveBtn.innerHTML = '<i class="fas fa-download"></i> يتم...';
+      saveBtn.disabled = true;
+      await saveCard(card);
+      saveBtn.innerHTML = originalHtml;
+      saveBtn.disabled = false;
+    });
+    
+    // الضغط على الكارت نفسه يحاكي زر الحفظ
+    card.addEventListener('click', (e) => {
+      if (e.target === saveBtn || saveBtn.contains(e.target)) return;
+      saveBtn.click();
+    });
+    
+    container.appendChild(card);
+  });
+  
+  console.log(`تم إنشاء ${allDays.length} كرت بمناسبة عرس أبو حفص ونمارق باللهجة السودانية`);
+</script>
+</body>
+</html>
