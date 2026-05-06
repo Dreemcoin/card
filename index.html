@@ -78,24 +78,27 @@
       border-radius: 10px;
     }
 
+    /* تصميم مبسط للكارت لتجنب مشاكل html2canvas */
     .story-card {
       flex: 0 0 auto;
       width: 310px;
       height: 550px;
-      background: radial-gradient(circle at 20% 30%, #fffaf5, #fff0e6);
+      background: linear-gradient(145deg, #fffaf5, #ffece3);
       border-radius: 55px;
-      box-shadow: 0 25px 40px rgba(0,0,0,0.35), 0 0 0 4px #ffdfce, 0 0 0 10px #fffaf0;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.35);
       position: relative;
       overflow: hidden;
       scroll-snap-align: start;
       transition: transform 0.25s ease;
       cursor: pointer;
+      border: 2px solid #ffddcf;
     }
 
     .story-card:active {
       transform: scale(0.97);
     }
 
+    /* خلفية بسيطة من القلوب بدون تعقيد */
     .card-bg-pattern {
       position: absolute;
       top: 0;
@@ -108,13 +111,8 @@
 
     .float-element {
       position: absolute;
-      animation: floatAround 9s infinite ease-in-out;
-    }
-
-    @keyframes floatAround {
-      0% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
-      50% { transform: translateY(-15px) rotate(8deg); opacity: 0.5; }
-      100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+      font-size: 16px;
+      color: rgba(230, 110, 85, 0.15);
     }
 
     .card-inner {
@@ -124,33 +122,29 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 1.3rem 1.2rem;
+      padding: 1.5rem 1.2rem;
       text-align: center;
     }
 
-    .crown-icon {
-      font-size: 1.5rem;
-      color: #f5bc70;
-      margin-bottom: 5px;
-    }
-
+    /* تدرج بسيط لخلفية النصوص */
     .badge-count {
-      background: linear-gradient(135deg, #e68364, #da5a3a);
+      background: #e26d52;
       display: inline-block;
       padding: 5px 18px;
       border-radius: 50px;
       color: white;
       font-size: 0.7rem;
       font-weight: bold;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     .days-remaining {
       font-size: 3rem;
       font-weight: 800;
-      color: #bd432a;
+      color: #c44a2e;
       line-height: 1.2;
       margin: 5px 0;
+      text-shadow: none;
     }
 
     .hijri-date-big {
@@ -166,20 +160,19 @@
     .couple-name {
       font-size: 1.5rem;
       font-weight: 800;
-      color: #9e3b26;
+      color: #a13c28;
       margin: 10px 0;
     }
 
     .sudani-message {
       background: #fffbf5;
       border-radius: 40px;
-      padding: 14px 10px;
+      padding: 12px 10px;
       margin: 12px 0;
       font-size: 0.8rem;
       line-height: 1.6;
       color: #4f3128;
       border: 1px solid #ffcfbb;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
 
     .location-time {
@@ -187,7 +180,7 @@
       color: #bd7861;
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       background: #fff3ec;
       padding: 6px 8px;
@@ -209,7 +202,6 @@
       gap: 8px;
       cursor: pointer;
       transition: 0.05s linear;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
 
     .save-icon:active {
@@ -325,54 +317,57 @@
   const allDays = getAllDays();
   const container = document.getElementById('cardsScroll');
   
-  // دالة حفظ الصورة - محسنة لالتقاط النصوص بشكل صحيح
-  window.saveCard = async (cardElement) => {
+  // دالة حفظ الصورة - بدون أي تظليل
+  async function saveCardAsImage(cardElement) {
     if (!cardElement) return;
     
-    // تغيير مؤقت للزر
-    const btn = cardElement.querySelector('.save-icon');
-    const originalText = btn ? btn.innerHTML : '';
-    if (btn) {
-      btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري...';
-      btn.disabled = true;
+    // تعطيل المؤثرات المؤقتة التي قد تسبب مشاكل
+    const saveBtn = cardElement.querySelector('.save-icon');
+    let btnOriginalHtml = '';
+    if (saveBtn) {
+      btnOriginalHtml = saveBtn.innerHTML;
+      saveBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> يتم...';
+      saveBtn.disabled = true;
     }
     
     try {
-      // انتظار قليل لضمان استقرار العناصر
-      await new Promise(r => setTimeout(r, 50));
+      // انتظار بسيط لاستقرار العناصر
+      await new Promise(resolve => setTimeout(resolve, 30));
       
       const canvas = await html2canvas(cardElement, {
         scale: 3,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#fff8f3',
         logging: false,
         useCORS: true,
         allowTaint: false,
         windowWidth: cardElement.scrollWidth,
         windowHeight: cardElement.scrollHeight,
         onclone: (clonedDoc, element) => {
-          // التأكد من أن النصوص تظهر بشكل صحيح في النسخة المستنسخة
-          const clonedCard = element;
-          if (clonedCard) {
-            clonedCard.style.transform = 'none';
-          }
+          // التأكد من أن النصوص واضحة في النسخة المستنسخة
+          const texts = element.querySelectorAll('.days-remaining, .couple-name, .sudani-message');
+          texts.forEach(text => {
+            text.style.textShadow = 'none';
+            text.style.webkitTextStroke = 'none';
+          });
         }
       });
       
+      // حفظ الصورة
       const link = document.createElement('a');
-      link.download = `farah_abuhafs_${Date.now()}.png`;
+      link.download = `farah_${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       
-    } catch (err) {
-      console.error("خطأ في حفظ الصورة:", err);
-      alert("حدث خطأ، حاول مرة ثانية أو استخدم خاصية التصوير المباشر");
+    } catch (error) {
+      console.error('خطأ:', error);
+      alert('حدث خطأ، حاول مرة أخرى');
     } finally {
-      if (btn) {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
+      if (saveBtn) {
+        saveBtn.innerHTML = btnOriginalHtml;
+        saveBtn.disabled = false;
       }
     }
-  };
+  }
   
   // إنشاء الكروت
   allDays.forEach((day, idx) => {
@@ -406,23 +401,22 @@
       celebrationText += `<br><span style="font-size:0.7rem;">⏰ الزفاف الساعة 12 الظهر قبل صلاة الجمعة ⏰</span>`;
     }
     
+    // إنشاء الكارت
     const card = document.createElement('div');
     card.className = 'story-card';
     
-    // خلفية مزينة بقلوب ونجوم
+    // إضافة خلفية قلوب بسيطة
     const bgPattern = document.createElement('div');
     bgPattern.className = 'card-bg-pattern';
-    for (let i = 0; i < 22; i++) {
-      const type = Math.random() > 0.5 ? 'fas fa-heart' : 'fas fa-star';
-      const el = document.createElement('i');
-      el.className = `${type} float-element`;
-      el.style.left = Math.random() * 100 + '%';
-      el.style.top = Math.random() * 100 + '%';
-      el.style.fontSize = (Math.random() * 26 + 10) + 'px';
-      el.style.animationDelay = Math.random() * 6 + 's';
-      el.style.animationDuration = (Math.random() * 7 + 4) + 's';
-      el.style.color = `rgba(210, 90, 60, ${Math.random() * 0.3 + 0.1})`;
-      bgPattern.appendChild(el);
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement('i');
+      heart.className = 'fas fa-heart float-element';
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.top = Math.random() * 100 + '%';
+      heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+      heart.style.opacity = Math.random() * 0.2 + 0.05;
+      heart.style.color = '#e26d52';
+      bgPattern.appendChild(heart);
     }
     
     const inner = document.createElement('div');
@@ -431,40 +425,40 @@
     
     inner.innerHTML = `
       <div>
-        <div class="crown-icon"><i class="fas fa-crown"></i></div>
+        <div style="font-size:2rem; margin-bottom:5px;">👑</div>
         <div class="badge-count">
           <i class="fas fa-calendar-heart"></i> ${badgeText}
         </div>
         <div class="days-remaining">
-          ${daysText} ${!isWeddingDay && remaining > 1 ? 'يوم' : ''}
+          ${daysText}
         </div>
         <div class="hijri-date-big">
           <i class="fas fa-moon"></i> ${hijri}
         </div>
         <div style="font-size:0.6rem; color:#b36c54; margin:5px 0;">
-          ${formatGregorian(day)} ${isToday ? '<i class="fas fa-heart" style="color:#e26d52;"></i>' : ''}
+          ${formatGregorian(day)} ${isToday ? ' 🔴 اليوم' : ''}
         </div>
       </div>
       
       <div>
         <div class="couple-name">
-          <i class="fas fa-heart"></i> أبو حفص & نمارق <i class="fas fa-heart"></i>
+          ❤️ أبو حفص & نمارق ❤️
         </div>
         <div class="sudani-message">
           ${celebrationText}
         </div>
         <div class="location-time">
-          <span><i class="fas fa-map-pin"></i> ${locationText}</span>
-          <span><i class="fas fa-clock"></i> ${timeText}</span>
+          <span>📍 ${locationText}</span>
+          <span>⏰ ${timeText}</span>
         </div>
       </div>
       
       <div>
         <button class="save-icon" type="button">
-          <i class="fas fa-camera-retro"></i> احفظ الكرت
+          📸 احفظ الكرت
         </button>
         <div class="footer-emoji">
-          <i class="fas fa-heartbeat"></i> يا رب تتم الفرحة بيكم <i class="fas fa-heartbeat"></i>
+          💕 يا رب تتم الفرحة بيكم 💕
         </div>
       </div>
     `;
@@ -472,22 +466,23 @@
     card.appendChild(bgPattern);
     card.appendChild(inner);
     
+    // ربط حدث الحفظ
     const saveBtn = inner.querySelector('.save-icon');
     saveBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
-      await window.saveCard(card);
+      await saveCardAsImage(card);
     });
     
-    // الضغط على الكارت نفسه يحفظ الصورة أيضاً
+    // الضغط على الكارت للحفظ
     card.addEventListener('click', async (e) => {
       if (e.target === saveBtn || saveBtn.contains(e.target)) return;
-      await window.saveCard(card);
+      await saveCardAsImage(card);
     });
     
     container.appendChild(card);
   });
   
-  console.log(`✅ تم إنشاء ${allDays.length} كرت بنجاح - مشكلة التظليل تم حلها`);
+  console.log(`✅ تم إنشاء ${allDays.length} كرت - مشكلة التظليل محلولة`);
 </script>
 </body>
 </html>
