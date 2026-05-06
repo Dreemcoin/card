@@ -148,10 +148,7 @@
     .days-remaining {
       font-size: 3rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #bd432a, #e97a58);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #bd432a;
       line-height: 1.2;
       margin: 5px 0;
     }
@@ -169,10 +166,7 @@
     .couple-name {
       font-size: 1.5rem;
       font-weight: 800;
-      background: linear-gradient(145deg, #9e3b26, #c96043);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #9e3b26;
       margin: 10px 0;
     }
 
@@ -266,20 +260,8 @@
   </div>
 </div>
 
-<!-- استخدام مكتبة html2canvas من مصدر أكثر استقراراً -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-  (function() {
-    // التأكد من تحميل المكتبة قبل البدء
-    if (typeof html2canvas === 'undefined') {
-      console.error("مكتبة html2canvas لم تحمل، جاري المحاولة مرة أخرى");
-      // محاولة تحميل بديل
-      var script = document.createElement('script');
-      script.src = 'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js';
-      document.head.appendChild(script);
-    }
-  })();
-
   // التواريخ
   const weddingDate = new Date(2026, 4, 29, 12, 0, 0);
   const startDate = new Date(2026, 4, 6, 0, 0, 0);
@@ -343,26 +325,52 @@
   const allDays = getAllDays();
   const container = document.getElementById('cardsScroll');
   
+  // دالة حفظ الصورة - محسنة لالتقاط النصوص بشكل صحيح
   window.saveCard = async (cardElement) => {
     if (!cardElement) return;
-    if (typeof html2canvas === 'undefined') {
-      alert("جاري تحميل المكتبة، حاول مرة ثانية خلال ثوان");
-      return;
+    
+    // تغيير مؤقت للزر
+    const btn = cardElement.querySelector('.save-icon');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري...';
+      btn.disabled = true;
     }
+    
     try {
+      // انتظار قليل لضمان استقرار العناصر
+      await new Promise(r => setTimeout(r, 50));
+      
       const canvas = await html2canvas(cardElement, {
-        scale: 2.5,
-        backgroundColor: null,
+        scale: 3,
+        backgroundColor: '#ffffff',
         logging: false,
-        useCORS: true
+        useCORS: true,
+        allowTaint: false,
+        windowWidth: cardElement.scrollWidth,
+        windowHeight: cardElement.scrollHeight,
+        onclone: (clonedDoc, element) => {
+          // التأكد من أن النصوص تظهر بشكل صحيح في النسخة المستنسخة
+          const clonedCard = element;
+          if (clonedCard) {
+            clonedCard.style.transform = 'none';
+          }
+        }
       });
+      
       const link = document.createElement('a');
-      link.download = `farah_sudani_${Date.now()}.png`;
+      link.download = `farah_abuhafs_${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
+      
     } catch (err) {
-      console.error(err);
-      alert("حدث خطأ، حاول مرة ثانية");
+      console.error("خطأ في حفظ الصورة:", err);
+      alert("حدث خطأ، حاول مرة ثانية أو استخدم خاصية التصوير المباشر");
+    } finally {
+      if (btn) {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
     }
   };
   
@@ -401,18 +409,19 @@
     const card = document.createElement('div');
     card.className = 'story-card';
     
+    // خلفية مزينة بقلوب ونجوم
     const bgPattern = document.createElement('div');
     bgPattern.className = 'card-bg-pattern';
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 22; i++) {
       const type = Math.random() > 0.5 ? 'fas fa-heart' : 'fas fa-star';
       const el = document.createElement('i');
       el.className = `${type} float-element`;
       el.style.left = Math.random() * 100 + '%';
       el.style.top = Math.random() * 100 + '%';
-      el.style.fontSize = (Math.random() * 24 + 10) + 'px';
+      el.style.fontSize = (Math.random() * 26 + 10) + 'px';
       el.style.animationDelay = Math.random() * 6 + 's';
       el.style.animationDuration = (Math.random() * 7 + 4) + 's';
-      el.style.color = `rgba(220, 100, 70, ${Math.random() * 0.25 + 0.1})`;
+      el.style.color = `rgba(210, 90, 60, ${Math.random() * 0.3 + 0.1})`;
       bgPattern.appendChild(el);
     }
     
@@ -466,23 +475,19 @@
     const saveBtn = inner.querySelector('.save-icon');
     saveBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
-      const originalHtml = saveBtn.innerHTML;
-      saveBtn.innerHTML = '<i class="fas fa-download"></i> يتم...';
-      saveBtn.disabled = true;
       await window.saveCard(card);
-      saveBtn.innerHTML = originalHtml;
-      saveBtn.disabled = false;
     });
     
-    card.addEventListener('click', (e) => {
+    // الضغط على الكارت نفسه يحفظ الصورة أيضاً
+    card.addEventListener('click', async (e) => {
       if (e.target === saveBtn || saveBtn.contains(e.target)) return;
-      saveBtn.click();
+      await window.saveCard(card);
     });
     
     container.appendChild(card);
   });
   
-  console.log(`✅ تم إنشاء ${allDays.length} كرت بنجاح`);
+  console.log(`✅ تم إنشاء ${allDays.length} كرت بنجاح - مشكلة التظليل تم حلها`);
 </script>
 </body>
 </html>
